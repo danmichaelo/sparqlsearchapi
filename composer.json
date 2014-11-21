@@ -1,0 +1,14 @@
+{
+    "name": "scriptotek/rt-api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dan Michael O. Heggø",
+            "email": "danmichaelo@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "easyrdf/easyrdf": "dev-master"
+    }
+}
