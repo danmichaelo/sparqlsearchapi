@@ -1,0 +1,65 @@
+endpoint: http://data.ub.uio.no/sparql
+graphs:
+    realfagstermer: http://data.ub.uio.no/rt
+    humord: http://data.ub.uio.no/humord
+    tekord: http://data.ub.uio.no/tekord
+prefLang: nb
+shortLimit: 4
+queries:
+
+    exact: >
+        SELECT DISTINCT ?concept ?prefLabel WHERE
+        {
+          GRAPH <{{graph}}>
+          {
+            ?concept skos:prefLabel "{{query}}"@{{prefLang}},
+                                    ?prefLabel .
+          }
+          FILTER(LANG(?prefLabel) =  "{{prefLang}}")
+        }
+
+    short: >
+        SELECT DISTINCT ?concept ?prefLabel ?label WHERE
+        {
+          GRAPH <{{graph}}>
+          {
+            ?concept skos:prefLabel ?prefLabel
+            {
+              SELECT DISTINCT ?concept ?label WHERE
+              {
+                 ?concept (skos:prefLabel | skos:altLabel) "{{query}}",
+                                                           ?label .
+              }
+            }
+          }
+          FILTER(lang(?prefLabel) = "{{prefLang}}")
+        }
+
+      # Note that bif:contains is a Virtuoso SPARQL extension
+      # http://docs.openlinksw.com/virtuoso/sparqlextensions.html 
+
+      #  FILTER (STRSTARTS(STR(?prefLabel), "{{query}}") || STRSTARTS(STR(?altLabel), "{{query}}"))
+      #  FILTER (REGEX(STR(?prefLabel), "{{query}}", "i") || REGEX(STR(?altLabel), "{{query}}", "i"))'.
+
+    standard: >
+        SELECT DISTINCT ?concept ?prefLabel ?label WHERE
+        {
+          GRAPH <{{graph}}>
+          {
+            ?concept skos:prefLabel ?prefLabel
+            {
+              SELECT DISTINCT ?concept ?label WHERE
+              {
+                 {
+                   ?concept skos:prefLabel ?label .
+                   ?label bif:contains "'{{query}}*'" .
+                 } UNION {
+                   ?concept skos:altLabel ?label .
+                   ?label bif:contains "'{{query}}*'" .
+                 }
+              }
+              LIMIT 100
+            }
+          }
+          FILTER(lang(?prefLabel) = "{{prefLang}}")
+        }

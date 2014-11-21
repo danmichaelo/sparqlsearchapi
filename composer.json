@@ -9,6 +9,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "ext-yaml": "*",
         "easyrdf/easyrdf": "dev-master"
+    },
+    "autoload": {
+        "classmap": ["src/"]
     }
 }
