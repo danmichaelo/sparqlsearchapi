@@ -17,6 +17,15 @@ class SparqlSearchApi {
 	public $shortLimit = 4;  // Limit for when the 'short' query is to be used;
 	public $queryTemplates = null;
 
+	public function __construct($config = null)
+	{
+		$this->endpoint = $config['endpoint'];
+		$this->graphs = $config['graphs'];
+		$this->prefLang = $config['prefLang'];
+		$this->shortLimit = $config['shortLimit'];
+		$this->queryTemplates = $config['queries'];
+	}
+
 	function uniq($array)
 	{
 		$out = array();
